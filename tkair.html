@@ -1,30 +1,56 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
-  <head>
+<html>
+<head>
     <meta charset="utf-8">
-    <title>Togzhan</title>
-    <link rel="stylesheet" href="style.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="script.js" defer></script>
-  </head>
-  <body>
-    <div class="wrapper">
-      <header>
-        <h2>Playable PIANO</h2>
-        <div class="column volume-slider">
-          <span>Volume</span><input type="range" min="0" max="1" value="0.5" step="any">
-        </div>
-        <div class="column keys-checkbox">
-          <span>Show Keys</span><input type="checkbox" checked>
-        </div>
-      </header>
-      <ul class="piano-keys">
-        <li class="key white" data-key="a"><span>a</span></li>
-        <li class="key black" data-key="w"><span>w</span></li>
-        <li class="key white" data-key="s"><span>s</span></li>
-        <li class="key black" data-key="e"><span>e</span></li>
-        <li class="key white" data-key="d"><span>d</span></li>
-      </ul>
-    </div>
-  </body>
+    <title>Uralsk</title>
+    <link rel="stylesheet" href="https://js.arcgis.com/4.23/esri/themes/light/main.css">
+    <script src="https://js.arcgis.com/4.23/"></script>
+    <style>
+        html, body, #viewDiv {
+            height: 100%; 
+            margin: 0; 
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="viewDiv"></div>
+    <script>
+        require([
+            "esri/Map",
+            "esri/views/MapView",
+            "esri/layers/FeatureLayer",
+            "esri/core/urlUtils",
+            "esri/PopupTemplate"
+        ], function(Map, MapView, FeatureLayer, urlUtils, PopupTemplate) {
+
+            // Создаем карту
+            const map = new Map({
+                basemap: "streets-navigation-vector"
+            });
+
+            const view = new MapView({
+                container: "viewDiv",
+                map: map,
+                center: [51.227821, 51.3865431], // Долгота и широта для центра карты
+                zoom: 10
+            });
+
+            // Создаем шаблон всплывающего окна
+            const popupTemplate = new PopupTemplate({
+                title: "{Rayon_aty}", // Предположим, что в атрибутах есть поле "name"
+                content: "Тип: {Shape__Area}" // Предположим, что в атрибутах есть поле "type"
+            });
+
+            // Добавляем слой с Shapefile
+            const featureLayer = new FeatureLayer({
+                url: "https://cacgeoportal-hub.maps.arcgis.com/home/item.html?id=2275f6ecff7d4db4aafa81d64b756524", // Замените на URL вашего Shapefile
+                popupTemplate: popupTemplate
+            });
+
+            map.add(featureLayer);
+
+        });
+    </script>
+</body>
 </html>
